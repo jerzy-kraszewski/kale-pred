@@ -122,7 +122,7 @@ impl KalePrediction {
     // ---------------------------------------------------
 
     /// Initialise contract with `admin` and **token** used for wagering.
-    pub fn init(env: Env, admin: Address, token: Address) {
+    pub fn __constructor(env: Env, admin: Address, token: Address) {
         if env.storage().instance().has(&DataKey::Admin) {
             panic_with_error!(env, Error::AlreadyInitialised);
         }

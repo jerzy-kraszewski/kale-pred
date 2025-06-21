@@ -47,11 +47,9 @@ fn setup() -> (
 
     // ── 2. Deploy Kale‑Prediction ────────────────────────────────────
     let admin = Address::generate(&env);
-    let contract_id = env.register(KalePrediction, ());
+    // pass constructor arguments directly when registering (best‑practice)
+    let contract_id = env.register(KalePrediction, (&admin, &token_addr));
     let kp_client = KalePredictionClient::new(&env, &contract_id);
-
-    // initialise (admin authorises)
-    kp_client.init(&admin, &token_addr);
 
     (env, mint_client, token_client, kp_client, admin)
 }
@@ -200,15 +198,6 @@ fn unauthorized_admin_calls() {
     let finality = cur + 4;
     // eve tries to start
     kp.start_round(&eve, &1u32, &deadline, &finality);
-}
-
-/// Calling `init` twice ➜ `AlreadyInitialised` (#2).
-#[test]
-#[should_panic(expected = "Error(Contract, #2)")]
-fn double_initialise_panics() {
-    let (env, _mint, _tok, kp, admin) = setup();
-    let token_addr = Address::generate(&env); // dummy address fine for test
-    kp.init(&admin, &token_addr); // second init → panic
 }
 
 /// Claiming an unknown round ➜ `RoundNotFound` (#3).
