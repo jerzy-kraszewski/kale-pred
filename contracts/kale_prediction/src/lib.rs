@@ -63,7 +63,7 @@ pub struct Round {
 
 #[contracttype]
 #[derive(Clone, Copy)]
-struct Stake {
+pub struct Stake {
     amount: i128,
     side: Side,
 }
@@ -337,6 +337,26 @@ impl KalePrediction {
 
         // transfer original stake back
         token_client(&env).transfer(&env.current_contract_address(), &player, &stake.amount);
+    }
+
+    /// Address that was set as admin in the constructor.
+    pub fn get_admin(env: Env) -> Address {
+        get_admin(&env)
+    }
+
+    /// Full `Round` data, or panics with `RoundNotFound` (#3).
+    pub fn get_round(env: Env, round_id: u32) -> Round {
+        env.storage()
+            .persistent()
+            .get(&DataKey::Round(round_id))
+            .unwrap_or_else(|| panic_with_error!(env, Error::RoundNotFound))
+    }
+
+    /// Caller’s stake for a round, or `None` if they never bet.
+    pub fn get_stake(env: Env, player: Address, round_id: u32) -> Option<Stake> {
+        env.storage()
+            .persistent()
+            .get(&DataKey::Stake(round_id, player))
     }
 }
 
