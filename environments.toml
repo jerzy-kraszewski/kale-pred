@@ -1,8 +1,8 @@
 ### Development environment configuration
 [development.network]
-rpc-url = "http://localhost:8000/rpc"
-network-passphrase = "Standalone Network ; February 2017"
-run-locally = true                                        # automatically start the local network container, if not already running
+rpc-url = "https://soroban-testnet.stellar.org"
+network-passphrase = "Test SDF Network ; September 2015"
+run-locally = false                                      # automatically start the local network container, if not already running
 
 [[development.accounts]]
 name = "me"    # Required. Keys for this account will be saved to `./.stellar/identity`
@@ -65,15 +65,15 @@ constructor_args = """
 # at-ledger-sequence = 50153603
 
 ### Staging environment configuration
-[staging.network]
-rpc-url = "https://soroban-testnet.stellar.org"
-network-passphrase = "Test SDF Network ; September 2015"
+# [staging.network]
+# rpc-url = "https://soroban-testnet.stellar.org"
+# network-passphrase = "Test SDF Network ; September 2015"
 
-[[staging.accounts]]
-name = "testnet-user"
-default = true
+# [[staging.accounts]]
+# name = "testnet-user"
+# default = true
 
-[staging.contracts]
+# [staging.contracts]
 # soroban-atomic-swap-contract = "C123..."
 # soroban-auth-contract = "C234..."
 # soroban-errors-contract = "C345..."

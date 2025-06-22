@@ -10,27 +10,30 @@ export default function CreateRound() {
       return;
     }
     kale_prediction
-      .start_round({
-        admin: address,
-        predicted_count: 0,
-        deadline_ledger: 10,
-        finality_ledger: 20,
-      })
-      .then(
-        (tx) => {
-          tx.signAndSend({
-            signTransaction: (xdr) =>
-              wallet.signTransaction(xdr, { networkPassphrase, address }),
-          }).then(
-            (sentTx) => {
-              console.log(sentTx.result);
-            },
-            (reason) => {
-              console.log(`rejected with reason ${reason}`);
-            },
-          );
+      .start_round(
+        {
+          admin: address,
+          predicted_count: 0,
+          deadline_ledger: 10,
+          finality_ledger: 20,
         },
-        (reason) => console.log(`rejected with reason: ${reason}`),
+        { simulate: true },
+      )
+      .then((tx) => {
+        console.log(tx.toXDR());
+        tx.signAndSend({
+          signTransaction: (xdr) =>
+            wallet.signTransaction(xdr, { networkPassphrase, address }),
+        })
+          .then((sentTx) => {
+            console.log(sentTx.sendTransactionResponse?.hash);
+          })
+          .catch((reason) =>
+            console.log(`sign and send failed with reason: ${reason}`),
+          );
+      })
+      .catch((reason) =>
+        console.log(`assembling tx failed with reason: ${reason}`),
       );
   };
 
